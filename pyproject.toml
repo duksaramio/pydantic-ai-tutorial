@@ -1,0 +1,10 @@
+[project]
+name = "pydantic-ai-tutorial"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "langfuse>=4.14.3",
+    "pydantic-ai-harness[codemode]>=0.21.0",
+    "pydantic-ai-slim[openai,web]>=2.27.1",
+    "python-dotenv>=1.2.2",
+]
