@@ -1,0 +1,4 @@
+model: ollama:muse-glimmer
+capabilities:
+  - CodeMode:
+      max_retries: 3

@@ -25,7 +25,14 @@ pydantic-ai-tutorial/
 ├── langfuse-integration.py # Multi-turn chatbot with Langfuse tracing
 ├── olympics.py             # Structured output example (Pydantic model)
 ├── roulette_wheel.py       # Tool calling with RunContext dependencies
-└── web-chat-ui.py          # Browser-based web chat UI
+├── web-chat-ui.py          # Browser-based web chat UI
+├── code_mode_basic.py      # Basic Code Mode (Monty sandbox) execution
+├── code_mode_selective.py  # Selective tool sandboxing via toolsets & metadata
+├── code_mode_observability.py # Nested tool call & return metadata inspection
+├── code_mode_mount.py      # Host directory mounting with MountDir
+├── code_mode_os_access.py  # Environment & OS access control (OSAccess)
+├── code_mode_agent_spec.py # Agent loaded from YAML spec
+└── code_mode_agent.yaml    # YAML agent spec definition
 ```
 
 ---
@@ -110,6 +117,29 @@ Spins up a lightweight web interface with custom agent tools using `agent.to_web
 uv run uvicorn web-chat-ui:app --reload
 ```
 Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+### 6. Code Mode (`code_mode_*.py`)
+Replaces multiple individual tool call turns with a single sandboxed Python (Monty) execution:
+
+```bash
+# Basic parallel tool calling and calculation
+uv run python code_mode_basic.py
+
+# Selective tool sandboxing via toolsets and metadata
+uv run python code_mode_selective.py
+
+# Extracting nested tool calls and returns metadata
+uv run python code_mode_observability.py
+
+# Filesystem access using MountDir
+uv run python code_mode_mount.py
+
+# Environment variable and OS callback access
+uv run python code_mode_os_access.py
+
+# Declarative YAML Agent Spec loading
+uv run python code_mode_agent_spec.py
+```
 
 ---
 
