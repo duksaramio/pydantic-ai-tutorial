@@ -38,3 +38,6 @@ print(result.output)
 #> city='London' country='United Kingdom'
 print(result.usage)
 #> RunUsage(cost=Decimal('0.0000525'), input_tokens=57, output_tokens=8, requests=1)
+
+# Ensure all spans/traces are sent to local Langfuse server before script termination
+langfuse.flush()
