@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from langfuse import get_client
 from pydantic_ai import Agent
 from pydantic_ai.messages import ToolReturnPart
 from pydantic_ai.models.ollama import OllamaModel
@@ -9,7 +10,11 @@ from pydantic_ai_harness import CodeMode
 # 1. Load environment variables from .env
 load_dotenv()
 
-# 2. Define Agent using Ollama model
+# 2. Initialize Langfuse client & Pydantic AI instrumentation
+langfuse = get_client()
+Agent.instrument_all()
+
+# 3. Define Agent using Ollama model
 ollama_model = os.getenv("OLLAMA_MODEL", "muse-glimmer")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
 
@@ -30,7 +35,7 @@ def get_weather(city: str) -> dict:
 
 
 def main():
-    print("--- Running Code Mode Observability / Metadata Example ---")
+    print("--- Running Code Mode Observability / Metadata Example (with Langfuse) ---")
     result = agent.run_sync("What's the weather in Paris?")
     print("\nFinal Output:")
     print(result.output)
@@ -47,6 +52,9 @@ def main():
                 print(f"   Nested tool_returns count: {len(tool_returns)}")
                 for call_id, call_part in tool_calls.items():
                     print(f"   - Call ID {call_id}: {call_part.tool_name} with args: {call_part.args}")
+
+    # Flush Langfuse traces
+    langfuse.flush()
 
 
 if __name__ == "__main__":

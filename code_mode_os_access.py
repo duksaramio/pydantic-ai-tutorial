@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from langfuse import get_client
 from pydantic_ai import Agent
 from pydantic_ai.models.ollama import OllamaModel
 from pydantic_ai.providers.ollama import OllamaProvider
@@ -9,7 +10,11 @@ from pydantic_monty import NOT_HANDLED, OSAccess
 # 1. Load environment variables from .env
 load_dotenv()
 
-# 2. Define Agent using Ollama model
+# 2. Initialize Langfuse client & Pydantic AI instrumentation
+langfuse = get_client()
+Agent.instrument_all()
+
+# 3. Define Agent using Ollama model
 ollama_model = os.getenv("OLLAMA_MODEL", "muse-glimmer")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
 
@@ -52,7 +57,7 @@ agent_custom_handler = Agent(
 
 
 def main():
-    print("--- Running Code Mode OS Access Examples ---")
+    print("--- Running Code Mode OS Access Examples (with Langfuse) ---")
 
     print("\n1. Testing Static OSAccess:")
     res_a = agent_static_env.run_sync(
@@ -65,6 +70,9 @@ def main():
         "Using python os.getenv, check the value of 'ALLOWED_KEY' and 'UNAUTHORIZED_KEY'."
     )
     print("Custom Callback Output:", res_b.output)
+
+    # Flush Langfuse traces
+    langfuse.flush()
 
 
 if __name__ == "__main__":

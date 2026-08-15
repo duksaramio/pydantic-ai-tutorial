@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from langfuse import get_client
 from pydantic_ai import Agent
 from pydantic_ai.models.ollama import OllamaModel
 from pydantic_ai.providers.ollama import OllamaProvider
@@ -10,7 +11,11 @@ from pydantic_monty import MountDir
 # 1. Load environment variables from .env
 load_dotenv()
 
-# 2. Define Agent using Ollama model
+# 2. Initialize Langfuse client & Pydantic AI instrumentation
+langfuse = get_client()
+Agent.instrument_all()
+
+# 3. Define Agent using Ollama model
 ollama_model = os.getenv("OLLAMA_MODEL", "muse-glimmer")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
 
@@ -40,7 +45,7 @@ agent = Agent(
 
 
 def main():
-    print("--- Running Code Mode Filesystem Mount Example ---")
+    print("--- Running Code Mode Filesystem Mount Example (with Langfuse) ---")
     print(f"Host directory: {host_workspace}")
     print(f"Existing files: {[f.name for f in host_workspace.iterdir()]}")
 
@@ -55,6 +60,9 @@ def main():
     summary_file = host_workspace / "summary.txt"
     if summary_file.exists():
         print(f"\nWritten Host File Content ({summary_file}):\n{summary_file.read_text()}")
+
+    # Flush Langfuse traces
+    langfuse.flush()
 
 
 if __name__ == "__main__":
