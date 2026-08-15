@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=city_eval_dataset_schema.json
+name: city_extraction_eval
+cases:
+- name: tokyo_query
+  inputs: Tell me about Tokyo.
+  metadata: null
+  expected_output:
+    city: Tokyo
+    country: Japan
+    continent: Asia
+    is_capital: true
+  evaluators: []
+- name: sydney_query
+  inputs: Tell me about Sydney.
+  metadata: null
+  expected_output:
+    city: Sydney
+    country: Australia
+    continent: Oceania
+    is_capital: false
+  evaluators: []
+- name: cairo_query
+  inputs: Tell me about Cairo.
+  metadata: null
+  expected_output:
+    city: Cairo
+    country: Egypt
+    continent: Africa
+    is_capital: true
+  evaluators: []
+evaluators:
+- IsInstance: CityDetails
+- ValidCityInfo
+report_evaluators: []
